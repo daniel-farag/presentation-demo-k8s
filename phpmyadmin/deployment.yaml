@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  template:
+    metadata:
+      labels:
+        app: phpmyadmin
+    spec:
+      containers:
+        - name: phpmyadmin
+          image: phpmyadmin:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          envFrom:
+            - configMapRef:
+                name: phpmyadmin-credentials
+
+          volumeMounts:
+            - name: apache-config
+              mountPath: /etc/apache2/sites-available/000-default.conf
+              subPath: 000-default.conf
+            - name: apache-config
+              mountPath: /etc/apache2/apache2.conf
+              subPath: apache2.conf
+
+      volumes:
+        - name: apache-config
+          configMap:
+            name: apache-config

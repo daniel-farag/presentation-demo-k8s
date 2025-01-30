@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-node
+spec:
+  selector:
+    matchLabels:
+      app: backend-node
+  template:
+    metadata:
+      labels:
+        app: backend-node
+    spec:
+      containers:
+      - name: backend-node
+        image: ghcr.io/danielfarag/presetation-demo/backend:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: backend-credentials
+
+      imagePullSecrets:
+        - name: github-token

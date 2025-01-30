@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+spec:
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      initContainers:
+      - name: frontend-build
+        image: ghcr.io/danielfarag/presetation-demo/frontend:v1
+        command: ["npm", "run", "build"]
+        volumeMounts:
+        - name: dist
+          mountPath: /app/dist/frontend/browser
+      
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: dist
+          mountPath: /usr/share/nginx/html
+
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf  
+
+          
+      volumes:
+      - name: dist
+        emptyDir: {}
+
+      - name: nginx-config
+        configMap:
+          name: nginx-config  
+
+      imagePullSecrets:
+        - name: github-token

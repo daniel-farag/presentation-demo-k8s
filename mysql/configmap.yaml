@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-credentials
+data:
+  MYSQL_ROOT_PASSWORD: rootpassword
+  MYSQL_DATABASE: exampledb
+  MYSQL_USER: exampleuser
+  MYSQL_PASSWORD: examplepassword
