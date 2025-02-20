@@ -13,11 +13,10 @@ spec:
     spec:
       initContainers:
       - name: frontend-build
-        image: ghcr.io/danielfarag/presetation-demo/frontend:v1
-        command: ["npm", "run", "build"]
+        image: ghcr.io/danielfarag/project1-node-frontend:v1
         volumeMounts:
         - name: dist
-          mountPath: /app/dist/frontend/browser
+          mountPath: /app
       
       containers:
       - name: nginx
